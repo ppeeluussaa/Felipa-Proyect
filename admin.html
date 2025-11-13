@@ -1,124 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel Admin - Felipa</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <style>
-    /* Estilos adicionales para admin */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #bfa66a;
-      margin-bottom: 20px;
-    }
-
-    .fecha-grupo {
-      margin-bottom: 30px;
-    }
-
-    .fecha-grupo h3 {
-      background-color: #fdf5e6;
-      color: #bfa66a;
-      padding: 8px 15px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .turno-card {
-      background-color: #fff;
-      border: 1px solid #f1e4d3;
-      border-left: 5px solid #bfa66a;
-      border-radius: 8px;
-      padding: 12px 15px;
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .turno-card p {
-      margin: 0;
-      font-size: 0.95rem;
-    }
-
-    .acciones {
-      margin-top: 8px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .acciones button {
-      background-color: #bfa66a;
-      color: #fff;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.2s;
-    }
-
-    .acciones button:hover {
-      background-color: #a38f55;
-    }
-
-    #logoutBtn {
-      margin: 20px 0;
-      background-color: #f1e4d3;
-      color: #bfa66a;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-      .turno-card {
-        font-size: 0.9rem;
-      }
-
-      .acciones {
-        flex-direction: column;
-      }
-
-      .acciones button {
-        width: 100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel Admin - Felipa</title>
+<link rel="stylesheet" href="css/style.css" />
+<style>
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+h2 { text-align: center; color: #bfa66a; margin-bottom: 20px; }
+.fecha-grupo { margin-bottom: 30px; }
+.fecha-grupo h3 { background-color: #fdf5e6; color: #bfa66a; padding: 8px 15px; border-radius: 8px; margin-bottom: 10px; }
+.turno-card { background-color: #fff; border: 1px solid #f1e4d3; border-left: 5px solid #bfa66a; border-radius: 8px; padding: 12px 15px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
+.turno-card p { margin: 0; font-size: 0.95rem; }
+.acciones { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+.acciones button { background-color: #bfa66a; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+.acciones button:hover { background-color: #a38f55; }
+#logoutBtn { margin: 20px 0; background-color: #f1e4d3; color: #bfa66a; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; display: block; margin-left: auto; margin-right: auto; font-weight: bold; }
+@media (max-width: 600px) { .turno-card { font-size: 0.9rem; } .acciones { flex-direction: column; } .acciones button { width: 100%; } }
+</style>
 </head>
 <body>
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="logo" onclick="window.location.href='index.html'">
-      <img src="img/flor-logo.svg" alt="Felipa Logo" class="logo-img" />
-      <span>Felipa</span>
-    </div>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="reservar.html">Reservar</a>
-      <a href="login.html">Iniciar sesión</a>
-    </nav>
-  </header>
-
-  <div class="container">
-    <h2>Panel de Turnos - Administración</h2>
-    <div id="listaTurnos"></div>
-    <button id="logoutBtn">Cerrar sesión</button>
+<header class="navbar">
+  <div class="logo" onclick="window.location.href='index.html'">
+    <img src="imagenes/logo-felipa.jpg" alt="Felipa Logo" class="logo-img" />
+    <span>Felipa</span>
   </div>
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="reservar.html">Reservar</a>
+    <a href="login.html">Iniciar sesión</a>
+  </nav>
+</header>
 
-  <script src="js/script.js"></script>
+<div class="container">
+  <h2>Panel de Turnos - Administración</h2>
+  <div id="listaTurnos"></div>
+  <button id="logoutBtn">Cerrar sesión</button>
+</div>
+
+<script>
+// Cargar turnos
+let turnos = JSON.parse(localStorage.getItem("turnos")) || [];
+const listaTurnos = document.getElementById("listaTurnos");
+
+function renderTurnos() {
+  listaTurnos.innerHTML = "";
+  if(turnos.length === 0) { listaTurnos.innerHTML = "<p>No hay turnos reservados.</p>"; return; }
+
+  // Agrupar por fecha
+  const grupos = {};
+  turnos.forEach(t => {
+    const fecha = `${t.dia}/${t.mes}/${t.año}`;
+    if(!grupos[fecha]) grupos[fecha] = [];
+    grupos[fecha].push(t);
+  });
+
+  for(const fecha in grupos) {
+    const divFecha = document.createElement("div");
+    divFecha.classList.add("fecha-grupo");
+    divFecha.innerHTML = `<h3>${fecha}</h3>`;
+    grupos[fecha].forEach((t, index) => {
+      const divTurno = document.createElement("div");
+      divTurno.classList.add("turno-card");
+      divTurno.innerHTML = `
+        <p><strong>Hora:</strong> ${t.hora}</p>
+        <p><strong>Nombre:</strong> ${t.nombre}</p>
+        <p><strong>Email:</strong> ${t.correo}</p>
+        <p><strong>Teléfono:</strong> ${t.telefono}</p>
+      `;
+      const acciones = document.createElement("div");
+      acciones.classList.add("acciones");
+      const btnEliminar = document.createElement("button");
+      btnEliminar.textContent = "Eliminar";
+      btnEliminar.addEventListener("click", () => {
+        turnos.splice(turnos.indexOf(t), 1);
+        localStorage.setItem("turnos", JSON.stringify(turnos));
+        renderTurnos();
+      });
+      acciones.appendChild(btnEliminar);
+      divTurno.appendChild(acciones);
+      divFecha.appendChild(divTurno);
+    });
+    listaTurnos.appendChild(divFecha);
+  }
+}
+
+renderTurnos();
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("usuarioActual");
+  window.location.href = "login.html";
+});
+</script>
 </body>
 </html>

@@ -9,133 +9,28 @@
 /* ==========================
    CALENDARIO PROFESIONAL
 ========================== */
-.calendar {
-  max-width: 900px;
-  margin: 30px auto;
-  background-color: #fffaf0;
-  border: 2px solid #f1e4d3;
-  border-radius: 10px;
-  padding: 20px;
-}
-
-.calendar h2 {
-  text-align: center;
-  color: #bfa66a;
-  margin-bottom: 20px;
-}
-
-.weekdays, .days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-}
-
-.weekdays div {
-  font-weight: bold;
-  text-align: center;
-  color: #bfa66a;
-}
-
-.day {
-  background-color: #fff;
-  border: 1px solid #f1e4d3;
-  border-radius: 6px;
-  padding: 8px;
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.day.disabled {
-  background-color: #f5f5f5;
-  color: #ccc;
-}
-
-.day h4 {
-  margin-bottom: 5px;
-  font-size: 0.9rem;
-}
-
-.horarios button {
-  margin: 2px;
-  padding: 5px 8px;
-  font-size: 0.8rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #bfa66a;
-  color: #fff;
-  transition: background 0.2s;
-}
-
-.horarios button:hover {
-  background-color: #a38f55;
-}
-
-.horarios button.reservado {
-  background-color: #e4d8b0;
-  color: #999;
-  cursor: default;
-}
-
-.mensajeReserva {
-  text-align: center;
-  margin-top: 15px;
-  font-weight: bold;
-  color: green;
-}
+.calendar { max-width: 900px; margin: 30px auto; background-color: #fffaf0; border: 2px solid #f1e4d3; border-radius: 10px; padding: 20px; }
+.calendar h2 { text-align: center; color: #bfa66a; margin-bottom: 20px; }
+.weekdays, .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.weekdays div { font-weight: bold; text-align: center; color: #bfa66a; }
+.day { background-color: #fff; border: 1px solid #f1e4d3; border-radius: 6px; padding: 8px; min-height: 120px; display: flex; flex-direction: column; align-items: center; }
+.day.disabled { background-color: #f5f5f5; color: #ccc; }
+.day h4 { margin-bottom: 5px; font-size: 0.9rem; }
+.horarios button { margin: 2px; padding: 5px 8px; font-size: 0.8rem; border: none; border-radius: 5px; cursor: pointer; background-color: #bfa66a; color: #fff; transition: background 0.2s; }
+.horarios button:hover { background-color: #a38f55; }
+.horarios button.reservado { background-color: #e4d8b0; color: #999; cursor: default; }
+.mensajeReserva { text-align: center; margin-top: 15px; font-weight: bold; color: green; }
 
 /* FORMULARIO DE DATOS */
-#formDatos {
-  max-width: 400px;
-  margin: 20px auto 0;
-  padding: 15px;
-  border: 2px solid #f1e4d3;
-  border-radius: 10px;
-  background-color: #fffaf0;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#formDatos input {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #f1e4d3;
-}
-
-#formDatos button {
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  background-color: #bfa66a;
-  color: #fff;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-
-#formDatos button:hover {
-  background-color: #a38f55;
-}
-
-.confirmacionFinal {
-  text-align: center;
-  font-weight: bold;
-  color: green;
-  margin-top: 15px;
-}
+#formDatos { max-width: 400px; margin: 20px auto 0; padding: 15px; border: 2px solid #f1e4d3; border-radius: 10px; background-color: #fffaf0; display: none; flex-direction: column; gap: 10px; }
+#formDatos input { padding: 8px; border-radius: 5px; border: 1px solid #f1e4d3; }
+#formDatos button { padding: 10px; border: none; border-radius: 6px; background-color: #bfa66a; color: #fff; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+#formDatos button:hover { background-color: #a38f55; }
+.confirmacionFinal { text-align: center; font-weight: bold; color: green; margin-top: 15px; }
 
 @media(max-width: 700px) {
-  .day {
-    min-height: 100px;
-  }
-
-  .horarios button {
-    padding: 4px 6px;
-    font-size: 0.7rem;
-  }
+  .day { min-height: 100px; }
+  .horarios button { padding: 4px 6px; font-size: 0.7rem; }
 }
 </style>
 </head>
@@ -188,7 +83,9 @@ mesActualSpan.textContent = nombreMeses[mes] + " " + año;
 
 let turnoSeleccionado = null;
 
-// Función para obtener el primer día del mes y cantidad de días
+// Cargar turnos reservados
+let turnos = JSON.parse(localStorage.getItem("turnos")) || [];
+
 const primerDiaMes = new Date(año, mes, 1).getDay();
 const cantidadDiasMes = new Date(año, mes + 1, 0).getDate();
 
@@ -212,12 +109,20 @@ for (let i = 1; i <= cantidadDiasMes; i++) {
     horariosDisponibles.forEach(hora => {
       const btn = document.createElement("button");
       btn.textContent = hora;
+
+      // Si ya está reservado, bloquear
+      if(turnos.some(t => t.dia===i && t.mes===mes+1 && t.hora===hora)) {
+        btn.classList.add("reservado");
+        btn.disabled = true;
+      }
+
       btn.addEventListener("click", () => {
-        turnoSeleccionado = `${i}/${mes+1} a las ${hora}`;
+        turnoSeleccionado = { dia:i, mes:mes+1, año, hora };
         formDatos.style.display = "flex";
         confirmacionFinal.textContent = "";
-        mensajeReserva.textContent = `⏳ Completá tus datos para confirmar el turno: ${turnoSeleccionado}`;
+        mensajeReserva.textContent = `⏳ Completá tus datos para confirmar el turno: ${i}/${mes+1} a las ${hora}`;
       });
+
       horariosDiv.appendChild(btn);
     });
   }
@@ -233,10 +138,18 @@ formDatos.addEventListener("submit", (e) => {
   const correo = document.getElementById("correo").value;
   const telefono = document.getElementById("telefono").value;
 
-  confirmacionFinal.textContent = `✅ Turno confirmado para ${turnoSeleccionado}\nNombre: ${nombre}, Correo: ${correo}, Tel: ${telefono}`;
+  const nuevoTurno = { ...turnoSeleccionado, nombre, correo, telefono };
+  turnos.push(nuevoTurno);
+  localStorage.setItem("turnos", JSON.stringify(turnos));
+
+  confirmacionFinal.textContent = `✅ Turno confirmado para ${turnoSeleccionado.dia}/${turnoSeleccionado.mes} a las ${turnoSeleccionado.hora}`;
   mensajeReserva.textContent = "";
   formDatos.reset();
   formDatos.style.display = "none";
+
+  // Refrescar botones
+  diasMesContainer.innerHTML = "";
+  location.reload(); // Simple para recargar y bloquear turno
 });
 </script>
 </body>
