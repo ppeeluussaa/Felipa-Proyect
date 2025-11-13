@@ -86,6 +86,47 @@
   color: green;
 }
 
+/* FORMULARIO DE DATOS */
+#formDatos {
+  max-width: 400px;
+  margin: 20px auto 0;
+  padding: 15px;
+  border: 2px solid #f1e4d3;
+  border-radius: 10px;
+  background-color: #fffaf0;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#formDatos input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #f1e4d3;
+}
+
+#formDatos button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #bfa66a;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+#formDatos button:hover {
+  background-color: #a38f55;
+}
+
+.confirmacionFinal {
+  text-align: center;
+  font-weight: bold;
+  color: green;
+  margin-top: 15px;
+}
+
 @media(max-width: 700px) {
   .day {
     min-height: 100px;
@@ -114,22 +155,29 @@
 <section class="calendar">
   <h2>Reservá tu turno - <span id="mesActual"></span></h2>
   <div class="weekdays">
-    <div>Lun</div>
-    <div>Mar</div>
-    <div>Mié</div>
-    <div>Jue</div>
-    <div>Vie</div>
-    <div>Sáb</div>
-    <div>Dom</div>
+    <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div>
+    <div>Vie</div><div>Sáb</div><div>Dom</div>
   </div>
   <div class="days" id="diasMes"></div>
   <div class="mensajeReserva" id="mensajeReserva"></div>
 </section>
 
+<!-- FORMULARIO DE DATOS -->
+<form id="formDatos">
+  <h3>Completá tus datos</h3>
+  <input type="text" id="nombre" placeholder="Nombre y Apellido" required />
+  <input type="email" id="correo" placeholder="Correo electrónico" required />
+  <input type="tel" id="telefono" placeholder="Número de teléfono" required />
+  <button type="submit">Confirmar turno</button>
+  <div class="confirmacionFinal" id="confirmacionFinal"></div>
+</form>
+
 <script>
 const diasMesContainer = document.getElementById("diasMes");
 const mensajeReserva = document.getElementById("mensajeReserva");
 const mesActualSpan = document.getElementById("mesActual");
+const formDatos = document.getElementById("formDatos");
+const confirmacionFinal = document.getElementById("confirmacionFinal");
 
 const horariosDisponibles = ["08:00", "10:00", "14:00", "17:00", "19:00"];
 const fechaHoy = new Date();
@@ -138,21 +186,20 @@ const mes = fechaHoy.getMonth();
 const nombreMeses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 mesActualSpan.textContent = nombreMeses[mes] + " " + año;
 
+let turnoSeleccionado = null;
+
 // Función para obtener el primer día del mes y cantidad de días
-const primerDiaMes = new Date(año, mes, 1).getDay(); // 0=Domingo, 1=Lunes...
+const primerDiaMes = new Date(año, mes, 1).getDay();
 const cantidadDiasMes = new Date(año, mes + 1, 0).getDate();
 
 for (let i = 1; i <= cantidadDiasMes; i++) {
   const diaDiv = document.createElement("div");
   diaDiv.classList.add("day");
-  // Ajuste para que la semana empiece en lunes
   const diaSemana = (new Date(año, mes, i).getDay() + 6) % 7;
   if(i === 1) diaDiv.style.gridColumnStart = diaSemana + 1;
 
   const fecha = new Date(año, mes, i);
-  if(fecha < fechaHoy) {
-    diaDiv.classList.add("disabled");
-  }
+  if(fecha < fechaHoy) diaDiv.classList.add("disabled");
 
   const h4 = document.createElement("h4");
   h4.textContent = i;
@@ -166,9 +213,10 @@ for (let i = 1; i <= cantidadDiasMes; i++) {
       const btn = document.createElement("button");
       btn.textContent = hora;
       btn.addEventListener("click", () => {
-        btn.classList.add("reservado");
-        btn.disabled = true;
-        mensajeReserva.textContent = `✅ Turno reservado para ${i}/${mes+1} a las ${hora}`;
+        turnoSeleccionado = `${i}/${mes+1} a las ${hora}`;
+        formDatos.style.display = "flex";
+        confirmacionFinal.textContent = "";
+        mensajeReserva.textContent = `⏳ Completá tus datos para confirmar el turno: ${turnoSeleccionado}`;
       });
       horariosDiv.appendChild(btn);
     });
@@ -177,6 +225,19 @@ for (let i = 1; i <= cantidadDiasMes; i++) {
   diaDiv.appendChild(horariosDiv);
   diasMesContainer.appendChild(diaDiv);
 }
+
+// ENVÍO DEL FORMULARIO
+formDatos.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById("nombre").value;
+  const correo = document.getElementById("correo").value;
+  const telefono = document.getElementById("telefono").value;
+
+  confirmacionFinal.textContent = `✅ Turno confirmado para ${turnoSeleccionado}\nNombre: ${nombre}, Correo: ${correo}, Tel: ${telefono}`;
+  mensajeReserva.textContent = "";
+  formDatos.reset();
+  formDatos.style.display = "none";
+});
 </script>
 </body>
 </html>
