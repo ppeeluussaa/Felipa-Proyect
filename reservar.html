@@ -4,11 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reservar turno - Felipa</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="Css/style.css" />
 </head>
 <body>
+  <!-- 🔝 NAVBAR -->
   <header class="navbar">
-    <div class="logo">Felipa</div>
+    <div class="logo" onclick="window.location.href='index.html'">
+      <img src="img/flor-logo.svg" alt="Felipa Logo" class="logo-img" />
+      <span>Felipa</span>
+    </div>
     <nav>
       <a href="index.html">Inicio</a>
       <a href="reservar.html" class="active">Reservar</a>
@@ -16,37 +20,41 @@
     </nav>
   </header>
 
-  <section class="reserva">
+  <!-- 📋 FORMULARIO DE RESERVA -->
+  <section class="form-section">
     <h2>Reservá tu turno</h2>
-    <form id="formReserva">
-      <label for="nombre">Nombre completo</label>
-      <input type="text" id="nombre" required />
+    <p>Completá tus datos y elegí el horario que más te convenga</p>
+
+    <form id="formReserva" class="reserva-form">
+      <label for="nombre">Nombre y apellido</label>
+      <input type="text" id="nombre" name="nombre" required placeholder="Ej: María López" />
+
+      <label for="telefono">Número de teléfono</label>
+      <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 11 2345 6789" />
 
       <label for="servicio">Servicio</label>
-      <select id="servicio" required>
+      <select id="servicio" name="servicio" required>
         <option value="">Seleccioná un servicio</option>
-        <option value="Manicuría tradicional">Manicuría tradicional</option>
-        <option value="Esmaltado semipermanente">Esmaltado semipermanente</option>
-        <option value="Kapping">Kapping</option>
-        <option value="Nail Art">Nail Art</option>
+        <option value="manicuria">Manicuría tradicional</option>
+        <option value="semipermanente">Esmaltado semipermanente</option>
+        <option value="kapping">Kapping</option>
+        <option value="nailart">Nail Art</option>
       </select>
 
       <label for="fecha">Fecha</label>
-      <input type="date" id="fecha" required />
+      <input type="date" id="fecha" name="fecha" required />
 
-      <label for="hora">Hora</label>
-      <input type="time" id="hora" required />
+      <label for="hora">Horario</label>
+      <select id="hora" name="hora" required>
+        <option value="">Seleccioná un horario</option>
+      </select>
 
       <button type="submit" class="btn">Reservar</button>
+      <div id="mensajeReserva" class="mensaje"></div>
     </form>
-
-    <div id="mensajeReserva" class="mensaje"></div>
   </section>
 
-  <a href="https://wa.me/549XXXXXXXXXX" class="whatsapp-btn" target="_blank">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-  </a>
-
+  <!-- 🦶 FOOTER -->
   <footer>
     <p>© 2025 Felipa - Todos los derechos reservados</p>
   </footer>

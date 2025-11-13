@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Iniciar sesión - Felipa</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="Css/style.css" />
 </head>
 <body>
   <header class="navbar">
@@ -26,6 +26,16 @@
       <input type="password" id="password" required />
 
       <button type="submit" class="btn">Entrar</button>
+    </form>
+
+    <button id="forgotPasswordBtn" class="link-btn">¿Olvidaste tu contraseña?</button>
+
+    <!-- Formulario oculto para recuperar contraseña -->
+    <form id="formRecuperar" class="hidden">
+      <h3>Recuperar contraseña</h3>
+      <label for="recuperarEmail">Ingresá tu correo</label>
+      <input type="email" id="recuperarEmail" required />
+      <button type="submit" class="btn">Enviar enlace</button>
     </form>
 
     <div id="mensajeLogin" class="mensaje"></div>
