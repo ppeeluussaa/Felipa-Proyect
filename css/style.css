@@ -112,38 +112,35 @@ body {
   gap: 20px;
 }
 
+/* ===== MODIFICACIÓN DE LAS CARDS ===== */
 .servicios-container .card {
   background-color: #fff;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 320px; /* altura total de la card */
 }
 
 .servicios-container .card:hover {
   transform: translateY(-5px);
 }
 
-/* Contenedor para imagen, para mantener proporción y que se vea completa */
-.servicios-container .card-img {
+.servicios-container .card img {
   width: 100%;
-  height: 200px; /* altura uniforme para todas las cards */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fffaf0;
-}
-
-.servicios-container .card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* imagen completa sin recortar */
+  height: 180px;       /* limita altura para que no sea gigante */
+  object-fit: contain;  /* muestra la imagen completa */
+  background-color: #fffaf0; /* evita fondo extraño */
+  display: block;
+  padding: 10px 0;     /* espacio arriba y abajo */
 }
 
 .servicios-container h3 {
   color: #bfa66a;
-  margin: 10px 0 5px;
+  margin: 10px 0;
 }
 
 .servicios-container p {
