@@ -8,7 +8,9 @@
 </head>
 <body>
   <header class="navbar">
-    <div class="logo">Felipa</div>
+    <div class="logo" onclick="window.location.href='index.html'">
+      <img src="images/logo-flor.png" alt="Felipa Logo" /> Felipa
+    </div>
     <nav>
       <a href="index.html">Inicio</a>
       <a href="reservar.html">Reservar</a>
@@ -28,7 +30,9 @@
       <button type="submit" class="btn">Entrar</button>
     </form>
 
-    <button id="forgotPasswordBtn" class="link-btn">¿Olvidaste tu contraseña?</button>
+    <p class="forgot-container">
+      <button id="forgotPasswordBtn" class="btn-link">¿Olvidaste tu contraseña?</button>
+    </p>
 
     <!-- Formulario oculto para recuperar contraseña -->
     <form id="formRecuperar" class="hidden">
@@ -45,6 +49,6 @@
     <p>© 2025 Felipa - Todos los derechos reservados</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="Js/script.js"></script>
 </body>
 </html>
