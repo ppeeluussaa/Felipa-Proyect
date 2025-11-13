@@ -6,6 +6,13 @@
 <title>Panel Admin - Felipa</title>
 <link rel="stylesheet" href="css/style.css" />
 <style>
+.navbar nav { display: flex; gap: 15px; }
+.navbar .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+@media(max-width: 768px) {
+  .navbar nav { display: none; flex-direction: column; background: #fff; position: absolute; top: 60px; right: 20px; border: 1px solid #f1e4d3; border-radius: 8px; padding: 10px; }
+  .navbar nav.active { display: flex; }
+  .navbar .menu-toggle { display: block; }
+}
 .container { max-width: 900px; margin: 0 auto; padding: 20px; }
 h2 { text-align: center; color: #bfa66a; margin-bottom: 20px; }
 .fecha-grupo { margin-bottom: 30px; }
@@ -25,6 +32,7 @@ h2 { text-align: center; color: #bfa66a; margin-bottom: 20px; }
     <img src="imagenes/logo-felipa.jpg" alt="Felipa Logo" class="logo-img" />
     <span>Felipa</span>
   </div>
+  <button class="menu-toggle" aria-label="Abrir menú">☰</button>
   <nav>
     <a href="index.html">Inicio</a>
     <a href="reservar.html">Reservar</a>
@@ -39,6 +47,10 @@ h2 { text-align: center; color: #bfa66a; margin-bottom: 20px; }
 </div>
 
 <script>
+const menuToggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.navbar nav');
+menuToggle.addEventListener('click', () => nav.classList.toggle('active'));
+
 // Cargar turnos
 let turnos = JSON.parse(localStorage.getItem("turnos")) || [];
 const listaTurnos = document.getElementById("listaTurnos");
@@ -47,7 +59,6 @@ function renderTurnos() {
   listaTurnos.innerHTML = "";
   if(turnos.length === 0) { listaTurnos.innerHTML = "<p>No hay turnos reservados.</p>"; return; }
 
-  // Agrupar por fecha
   const grupos = {};
   turnos.forEach(t => {
     const fecha = `${t.dia}/${t.mes}/${t.año}`;
@@ -59,7 +70,7 @@ function renderTurnos() {
     const divFecha = document.createElement("div");
     divFecha.classList.add("fecha-grupo");
     divFecha.innerHTML = `<h3>${fecha}</h3>`;
-    grupos[fecha].forEach((t, index) => {
+    grupos[fecha].forEach((t) => {
       const divTurno = document.createElement("div");
       divTurno.classList.add("turno-card");
       divTurno.innerHTML = `
@@ -87,7 +98,6 @@ function renderTurnos() {
 
 renderTurnos();
 
-// Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("usuarioActual");
   window.location.href = "login.html";

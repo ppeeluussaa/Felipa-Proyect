@@ -5,6 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Felipa - Manicuría Profesional</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* NAVBAR RESPONSIVE */
+    .navbar {
+      position: relative;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 15px;
+    }
+    .navbar .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    @media(max-width: 768px) {
+      .navbar nav {
+        display: none;
+        flex-direction: column;
+        background: #fffaf0;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        border: 1px solid #f1e4d3;
+        border-radius: 8px;
+        padding: 10px;
+        z-index: 100;
+      }
+      .navbar nav.show {
+        display: flex;
+      }
+      .navbar .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- 🔝 NAVBAR -->
@@ -13,6 +51,7 @@
       <img src="imagenes/logo-felipa.jpg" alt="Felipa Logo" class="logo-img" />
       <span>Felipa</span>
     </div>
+    <button class="menu-toggle" aria-label="Abrir menú">☰</button>
     <nav>
       <a href="index.html" class="active">Inicio</a>
       <a href="#servicios">Servicios</a>
@@ -59,5 +98,14 @@
   <footer>
     <p>© 2025 Felipa - Todos los derechos reservados</p>
   </footer>
+
+  <script>
+    // Menú hamburguesa
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('.navbar nav');
+    menuToggle.addEventListener('click', () => {
+      nav.classList.toggle('show');
+    });
+  </script>
 </body>
 </html>

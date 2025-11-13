@@ -32,6 +32,17 @@
   .day { min-height: 100px; }
   .horarios button { padding: 4px 6px; font-size: 0.7rem; }
 }
+
+/* ==========================
+   NAVBAR RESPONSIVE
+========================== */
+.navbar nav { display: flex; gap: 15px; }
+.navbar .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+@media(max-width: 768px) {
+  .navbar nav { display: none; flex-direction: column; background: #fff; position: absolute; top: 60px; right: 20px; border: 1px solid #f1e4d3; border-radius: 8px; padding: 10px; }
+  .navbar nav.active { display: flex; }
+  .navbar .menu-toggle { display: block; }
+}
 </style>
 </head>
 <body>
@@ -40,6 +51,7 @@
     <img src="imagenes/logo-felipa.jpg" alt="Felipa Logo" class="logo-img" />
     <span>Felipa</span>
   </div>
+  <button class="menu-toggle" aria-label="Abrir menú">☰</button>
   <nav>
     <a href="index.html">Inicio</a>
     <a href="reservar.html" class="active">Reservar</a>
@@ -57,7 +69,6 @@
   <div class="mensajeReserva" id="mensajeReserva"></div>
 </section>
 
-<!-- FORMULARIO DE DATOS -->
 <form id="formDatos">
   <h3>Completá tus datos</h3>
   <input type="text" id="nombre" placeholder="Nombre y Apellido" required />
@@ -68,6 +79,10 @@
 </form>
 
 <script>
+const menuToggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.navbar nav');
+menuToggle.addEventListener('click', () => nav.classList.toggle('active'));
+
 const diasMesContainer = document.getElementById("diasMes");
 const mensajeReserva = document.getElementById("mensajeReserva");
 const mesActualSpan = document.getElementById("mesActual");
@@ -82,8 +97,6 @@ const nombreMeses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","A
 mesActualSpan.textContent = nombreMeses[mes] + " " + año;
 
 let turnoSeleccionado = null;
-
-// Cargar turnos reservados
 let turnos = JSON.parse(localStorage.getItem("turnos")) || [];
 
 const primerDiaMes = new Date(año, mes, 1).getDay();
@@ -110,7 +123,6 @@ for (let i = 1; i <= cantidadDiasMes; i++) {
       const btn = document.createElement("button");
       btn.textContent = hora;
 
-      // Si ya está reservado, bloquear
       if(turnos.some(t => t.dia===i && t.mes===mes+1 && t.hora===hora)) {
         btn.classList.add("reservado");
         btn.disabled = true;
@@ -131,7 +143,6 @@ for (let i = 1; i <= cantidadDiasMes; i++) {
   diasMesContainer.appendChild(diaDiv);
 }
 
-// ENVÍO DEL FORMULARIO
 formDatos.addEventListener("submit", (e) => {
   e.preventDefault();
   const nombre = document.getElementById("nombre").value;
@@ -147,9 +158,8 @@ formDatos.addEventListener("submit", (e) => {
   formDatos.reset();
   formDatos.style.display = "none";
 
-  // Refrescar botones
   diasMesContainer.innerHTML = "";
-  location.reload(); // Simple para recargar y bloquear turno
+  location.reload();
 });
 </script>
 </body>
