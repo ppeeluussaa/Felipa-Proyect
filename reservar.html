@@ -1,64 +1,182 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reservar turno - Felipa</title>
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reservar turno - Felipa</title>
+<link rel="stylesheet" href="css/style.css" />
+<style>
+/* ==========================
+   CALENDARIO PROFESIONAL
+========================== */
+.calendar {
+  max-width: 900px;
+  margin: 30px auto;
+  background-color: #fffaf0;
+  border: 2px solid #f1e4d3;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.calendar h2 {
+  text-align: center;
+  color: #bfa66a;
+  margin-bottom: 20px;
+}
+
+.weekdays, .days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.weekdays div {
+  font-weight: bold;
+  text-align: center;
+  color: #bfa66a;
+}
+
+.day {
+  background-color: #fff;
+  border: 1px solid #f1e4d3;
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.day.disabled {
+  background-color: #f5f5f5;
+  color: #ccc;
+}
+
+.day h4 {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.horarios button {
+  margin: 2px;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #bfa66a;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.horarios button:hover {
+  background-color: #a38f55;
+}
+
+.horarios button.reservado {
+  background-color: #e4d8b0;
+  color: #999;
+  cursor: default;
+}
+
+.mensajeReserva {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: bold;
+  color: green;
+}
+
+@media(max-width: 700px) {
+  .day {
+    min-height: 100px;
+  }
+
+  .horarios button {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+}
+</style>
 </head>
 <body>
-  <!-- 🔝 NAVBAR -->
-  <header class="navbar">
-    <div class="logo" onclick="window.location.href='index.html'">
-      <img src="imagenes/logo-felipa.jpg" alt="Felipa Logo" class="logo-img" />
-      <span>Felipa</span>
-    </div>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="reservar.html" class="active">Reservar</a>
-      <a href="login.html">Iniciar sesión</a>
-    </nav>
-  </header>
+<header class="navbar">
+  <div class="logo" onclick="window.location.href='index.html'">
+    <img src="imagenes/logo-felipa.jpg" alt="Felipa Logo" class="logo-img" />
+    <span>Felipa</span>
+  </div>
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="reservar.html" class="active">Reservar</a>
+    <a href="login.html">Iniciar sesión</a>
+  </nav>
+</header>
 
-  <!-- 📋 FORMULARIO DE RESERVA -->
-  <section class="form-section">
-    <h2>Reservá tu turno</h2>
-    <p>Completá tus datos y elegí el horario que más te convenga</p>
+<section class="calendar">
+  <h2>Reservá tu turno - <span id="mesActual"></span></h2>
+  <div class="weekdays">
+    <div>Lun</div>
+    <div>Mar</div>
+    <div>Mié</div>
+    <div>Jue</div>
+    <div>Vie</div>
+    <div>Sáb</div>
+    <div>Dom</div>
+  </div>
+  <div class="days" id="diasMes"></div>
+  <div class="mensajeReserva" id="mensajeReserva"></div>
+</section>
 
-    <form id="formReserva" class="reserva-form">
-      <label for="nombre">Nombre y apellido</label>
-      <input type="text" id="nombre" name="nombre" required placeholder="Ej: María López" />
+<script>
+const diasMesContainer = document.getElementById("diasMes");
+const mensajeReserva = document.getElementById("mensajeReserva");
+const mesActualSpan = document.getElementById("mesActual");
 
-      <label for="telefono">Número de teléfono</label>
-      <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 11 2345 6789" />
+const horariosDisponibles = ["08:00", "10:00", "14:00", "17:00", "19:00"];
+const fechaHoy = new Date();
+const año = fechaHoy.getFullYear();
+const mes = fechaHoy.getMonth();
+const nombreMeses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+mesActualSpan.textContent = nombreMeses[mes] + " " + año;
 
-      <label for="servicio">Servicio</label>
-      <select id="servicio" name="servicio" required>
-        <option value="">Seleccioná un servicio</option>
-        <option value="manicuria">Manicuría tradicional</option>
-        <option value="semipermanente">Esmaltado semipermanente</option>
-        <option value="kapping">Kapping</option>
-        <option value="nailart">Nail Art</option>
-      </select>
+// Función para obtener el primer día del mes y cantidad de días
+const primerDiaMes = new Date(año, mes, 1).getDay(); // 0=Domingo, 1=Lunes...
+const cantidadDiasMes = new Date(año, mes + 1, 0).getDate();
 
-      <label for="fecha">Fecha</label>
-      <input type="date" id="fecha" name="fecha" required />
+for (let i = 1; i <= cantidadDiasMes; i++) {
+  const diaDiv = document.createElement("div");
+  diaDiv.classList.add("day");
+  // Ajuste para que la semana empiece en lunes
+  const diaSemana = (new Date(año, mes, i).getDay() + 6) % 7;
+  if(i === 1) diaDiv.style.gridColumnStart = diaSemana + 1;
 
-      <label for="hora">Horario</label>
-      <select id="hora" name="hora" required>
-        <option value="">Seleccioná un horario</option>
-      </select>
+  const fecha = new Date(año, mes, i);
+  if(fecha < fechaHoy) {
+    diaDiv.classList.add("disabled");
+  }
 
-      <button type="submit" class="btn">Reservar</button>
-      <div id="mensajeReserva" class="mensaje"></div>
-    </form>
-  </section>
+  const h4 = document.createElement("h4");
+  h4.textContent = i;
+  diaDiv.appendChild(h4);
 
-  <!-- 🦶 FOOTER -->
-  <footer>
-    <p>© 2025 Felipa - Todos los derechos reservados</p>
-  </footer>
+  const horariosDiv = document.createElement("div");
+  horariosDiv.classList.add("horarios");
 
-  <script src="js/script.js"></script>
+  if(!diaDiv.classList.contains("disabled")) {
+    horariosDisponibles.forEach(hora => {
+      const btn = document.createElement("button");
+      btn.textContent = hora;
+      btn.addEventListener("click", () => {
+        btn.classList.add("reservado");
+        btn.disabled = true;
+        mensajeReserva.textContent = `✅ Turno reservado para ${i}/${mes+1} a las ${hora}`;
+      });
+      horariosDiv.appendChild(btn);
+    });
+  }
+
+  diaDiv.appendChild(horariosDiv);
+  diasMesContainer.appendChild(diaDiv);
+}
+</script>
 </body>
 </html>

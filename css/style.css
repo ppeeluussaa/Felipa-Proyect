@@ -296,6 +296,27 @@ form .btn:hover {
 #logoutBtn:hover {
   background-color: #e4d8b0;
 }
+.horario-btn {
+  padding: 8px 15px;
+  background-color: #fffaf0;
+  border: 2px solid #bfa66a;
+  color: #bfa66a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.horario-btn:hover {
+  background-color: #bfa66a;
+  color: #fff;
+}
+
+.horario-btn.selected {
+  background-color: #bfa66a;
+  color: #fff;
+  border-color: #a38f55;
+}
+
 
 /* ==========================
    EFECTO CONFETI
