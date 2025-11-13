@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión - Felipa</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Felipa</div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="reservar.html">Reservar</a>
+      <a href="login.html" class="active">Iniciar sesión</a>
+    </nav>
+  </header>
+
+  <section class="login">
+    <h2>Iniciar sesión</h2>
+    <form id="formLogin">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" required />
+
+      <button type="submit" class="btn">Entrar</button>
+    </form>
+
+    <div id="mensajeLogin" class="mensaje"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Felipa - Todos los derechos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
